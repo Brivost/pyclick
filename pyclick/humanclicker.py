@@ -1,5 +1,7 @@
 import pyautogui
 from pyclick.humancurve import HumanCurve
+import time
+
 
 def setup_pyautogui():
     # Any duration less than this is rounded to 0.0 to instantly move the mouse.
@@ -9,25 +11,26 @@ def setup_pyautogui():
     # The number of seconds to pause after EVERY public function call.
     pyautogui.PAUSE = 0.015  # Default: 0.1
 
+
 setup_pyautogui()
 
-class HumanClicker():
+
+class HumanClicker:
     def __init__(self):
         pass
 
-    def move(self, toPoint, duration=2, humanCurve=None):
+    def move(self, toPoint, duration=2, humanCurve=None, mouse=None):
         fromPoint = pyautogui.position()
         if not humanCurve:
             humanCurve = HumanCurve(fromPoint, toPoint)
 
         pyautogui.PAUSE = duration / len(humanCurve.points)
         for point in humanCurve.points:
-            pyautogui.moveTo(point)
+            if mouse is not None:
+                mouse.position = point
+                time.sleep(pyautogui.PAUSE)
+            else:
+                pyautogui.moveTo(point)
 
     def click(self):
         pyautogui.click()
-
-
-
-
-
